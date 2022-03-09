@@ -3,8 +3,14 @@ import tw from 'twrnc';
 import NavOptions from '../components/NavOptions';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_APIKEY } from "@env";
+import { useDispatch } from "react-redux";
+import { setDestination, setOrigin } from "../slices/navSlice"
+import NavFavourites from '../components/NavFavourites';
 
 const HomeScreen = () => {
+
+    const dispatch = useDispatch();
+
     const body = (
             <View style={tw`p-5`}>
                 <Image
@@ -13,7 +19,6 @@ const HomeScreen = () => {
                     uri: "https://links.papareact.com/gzs"
                     }}
                 />
-                <Text>{GOOGLE_MAPS_APIKEY}</Text>
                 <GooglePlacesAutocomplete
                     styles={{
                         container:{
@@ -28,12 +33,22 @@ const HomeScreen = () => {
                         key:GOOGLE_MAPS_APIKEY,
                         language: 'en'
                     }}
-                    onPress={(data, details = null) => console.log(data)}
-                    onFail={(error) => console.error(error)}
+                    enablePoweredByContainer={false}
+                    minLength={2}
+                    onPress={(data, details = null) => { 
+                        dispatch(setOrigin({
+                            location: details.geometry.location,
+                            description: data.description,
+                        }));
+                        dispatch(setDestination(null))
+                    }}
+                    fetchDetails={true}
+                    returnKeyType={"search"}
                     nearbyPlacesAPI='GooglePlacesSearch'
                     debounce={400}
                 />
                 <NavOptions/>
+                <NavFavourites/>
             </View>
     )
     const iosView = (

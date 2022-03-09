@@ -1,23 +1,39 @@
-import { Platform, StyleSheet, View, Text, SafeAreaView, Image } from 'react-native'
+import {  View, Text, Image } from 'react-native'
 import tw from 'twrnc';
+import Map from '../components/Map';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import NavigateCard from '../components/NavigateCard';
+import RideOptionsCard from '../components/RideOptionsCard';
 
 const MapScreen = () => {
-    const body = (
-        <View style={tw`p-5`}>
-            <Text>Welcome to MapScreen</Text>
+
+    const Stack = createNativeStackNavigator();
+
+    return (
+        <View>
+            <View style={tw`h-1/2`}>
+                <Map/>
+            </View>
+            <View style={tw`h-1/2`}>
+                <Stack.Navigator>
+                    <Stack.Screen
+                        name='NavigateCard'
+                        component={NavigateCard}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name='RideOptionsCard'
+                        component={RideOptionsCard}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                </Stack.Navigator>
+            </View>
         </View>
     )
-    const iosView = (
-        <SafeAreaView style={tw`bg-white h-full`}>
-            {body}
-        </SafeAreaView>
-    )
-    const andView = (
-        <View style={tw`bg-white h-full pt-5`}>
-            {body}
-        </View>)
-
-    return Platform.OS === 'ios' ? iosView : andView
 }
 
 export default MapScreen
