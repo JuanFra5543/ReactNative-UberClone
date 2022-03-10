@@ -1,9 +1,12 @@
-import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList, Image, StatusBar } from 'react-native'
+import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList, Image } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc';
-import Constants from 'expo-constants';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { selectTravelTimeInformation } from '../slices/navSlice';
+import Intl from 'intl';
+import 'intl/locale-data/jsonp/en-GB'
 
 const data = [
   {
@@ -26,10 +29,13 @@ const data = [
   },
 ];
 
+const SURGE_CHARGE_RATE = 1.5;
+
 const RideOptionsCard = () => {
  
   const navigation = useNavigation();
   const [selected, setSelected] = useState(null)
+  const travelTimeInfo = useSelector(selectTravelTimeInformation)
 
   const body = (
           <View>
@@ -40,7 +46,7 @@ const RideOptionsCard = () => {
               >
                 <Icon name='chevron-left' type='fontawesome'/>
               </TouchableOpacity>
-              <Text style={tw`text-center py-5 text-xl`}>Select a Ride</Text>
+              <Text style={tw`text-center py-5 text-xl`}>Select a Ride - {travelTimeInfo?.distance?.text}</Text>
             </View>
             <FlatList
               data={data}
@@ -60,14 +66,21 @@ const RideOptionsCard = () => {
                   />
                   <View style={tw`-ml-6`}>
                     <Text style={tw`text-xl font-semibold`}>{title}</Text>
-                    <Text>Travel Time...</Text>
+                    <Text>{travelTimeInfo?.duration?.text}</Text>
                   </View>
-                  <Text style={tw`text-xl`}>$99</Text>
+                  <Text style={tw`text-xl`}>{
+                    new Intl.NumberFormat('en-GB',{
+                      style:'currency',
+                      currency:'GBP'
+                    }).format(
+                      (travelTimeInfo?.duration?.value * SURGE_CHARGE_RATE * multiplier) / 100
+                    )
+                  }</Text>
                 </TouchableOpacity>
               )}
             />
-            <View>
-              <TouchableOpacity style={tw`bg-black py-3 m-3`}>
+            <View style={tw`mt-auto border-t border-gray-200`}>
+              <TouchableOpacity disabled={!selected} style={tw`bg-black py-3 m-3 ${!selected && "bg-gray-300"}`}>
                 <Text style={tw`text-center text-white text-xl`}>Choose {selected?.title}</Text>
               </TouchableOpacity>
             </View>
@@ -79,7 +92,7 @@ const RideOptionsCard = () => {
       </SafeAreaView>
   )
   const andView = (
-      <View style={tw`bg-white flex-grow pb-72`}>
+      <View style={tw`bg-white flex-grow`}>
           {body}
       </View>)
 
