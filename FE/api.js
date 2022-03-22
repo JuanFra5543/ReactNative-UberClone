@@ -1,4 +1,4 @@
-const api = "http://192.168.3.6:5500/api/favourite"
+const api = "http://url/api/favourite"
 
 export const getFavourites = async () => {
     const res = await fetch(api)
