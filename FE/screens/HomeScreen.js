@@ -6,10 +6,21 @@ import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useDispatch } from "react-redux";
 import { setDestination, setOrigin } from "../slices/navSlice"
 import NavFavourites from '../components/NavFavourites';
+import { useEffect, useState } from 'react';
+import { getFavourites } from '../api';
 
 const HomeScreen = () => {
 
     const dispatch = useDispatch();
+
+    const [favourites, setFavourites] = useState([])
+    const loadTask = async () => {
+        const data = await getFavourites()
+        setFavourites(data)
+    }
+    useEffect(()=>{
+       loadTask()
+    },[])
 
     const body = (
             <View style={tw`p-5`}>
@@ -48,7 +59,7 @@ const HomeScreen = () => {
                     debounce={400}
                 />
                 <NavOptions/>
-                <NavFavourites/>
+                <NavFavourites favourites={favourites}/>
             </View>
     )
     const iosView = (

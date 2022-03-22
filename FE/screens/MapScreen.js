@@ -6,11 +6,24 @@ import NavigateCard from '../components/NavigateCard';
 import RideOptionsCard from '../components/RideOptionsCard';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
+import { getFavourites } from '../api';
 
 const MapScreen = () => {
 
     const Stack = createNativeStackNavigator();
     const navigation = useNavigation();
+
+    const [favourites, setFavourites] = useState([])
+
+    const loadTask = async () => {
+        const data = await getFavourites()
+        setFavourites(data)
+    }
+
+    useEffect(()=>{
+       loadTask()
+    },[])
 
     return (
         <View>
@@ -31,11 +44,11 @@ const MapScreen = () => {
                 <Stack.Navigator>
                     <Stack.Screen
                         name='NavigateCard'
-                        component={NavigateCard}
                         options={{
                             headerShown: false,
-                        }}
-                    />
+                        }}>
+                         {(props) => <NavigateCard {...props} favourites={favourites} />}   
+                    </Stack.Screen>
                     <Stack.Screen
                         name='RideOptionsCard'
                         component={RideOptionsCard}

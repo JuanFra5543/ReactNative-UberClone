@@ -9,14 +9,13 @@ import { useNavigation } from '@react-navigation/native';
 import NavFavourites from './NavFavourites';
 import { Icon } from 'react-native-elements';
 
-const NavigateCard = () => {
+const NavigateCard = ({favourites}) => {
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
-
     const body = (
         <View>
-            <Text style={tw`text-center py-5 text-xl`}>Good Morning, Sonny </Text>
+            <Text style={tw`text-center py-5 text-xl`}>Good Morning, Juan Fra </Text>
             <View style={tw`border-t border-gray-200 flex-shrink`}>
                 <View>
                     <GooglePlacesAutocomplete
@@ -41,7 +40,7 @@ const NavigateCard = () => {
                         returnKeyType={"search"}
                     />
                 </View>
-                <NavFavourites/>
+                <NavFavourites favourites={favourites}/>
             </View>
             <View style={tw`flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100`}>
                 <TouchableOpacity 

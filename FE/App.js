@@ -31,8 +31,7 @@ export default function App() {
                 component={MapScreen}
                 options={{
                   headerShown: false,
-                }}
-              />
+                }}/>
             </Stack.Navigator>
           </KeyboardAvoidingView>
         </SafeAreaProvider>
